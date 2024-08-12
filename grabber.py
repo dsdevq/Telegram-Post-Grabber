@@ -14,7 +14,7 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Read config file
-with open(abspath('config.json'), encoding='utf-8') as f:
+with open(abspath('grabber-config.json'), encoding='utf-8') as f:
     config = json.load(f)
 
 # Check if config file is empty
@@ -43,11 +43,11 @@ def has_ban_symbols(text, ban_symbols):
     return bool(re.search(pattern, text, flags=re.I))
 
 def send_message(message):
-    if config['bot']['token'] and config['bot']['all_ID']:
+    if config['bot']['grabber-token'] and config['bot']['all_ID']:
         for user_id in config['bot']['all_ID']:
             url_message = quote_plus(message)
             requests.post(
-                url="https://api.telegram.org/bot" + str(config['bot']['token']) + "/sendMessage?chat_id=" + str(
+                url="https://api.telegram.org/bot" + str(config['bot']['grabber-token']) + "/sendMessage?chat_id=" + str(
                     user_id) + "&text=" + str(url_message)
             ).json()
 
