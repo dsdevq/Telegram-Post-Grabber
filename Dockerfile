@@ -9,4 +9,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-CMD [ "python3", "grabber.py", "--host=0.0.0.0"]
+CMD ["sh", "-c", "python3 grabber.py --host=0.0.0.0 & python3 actions.py --host=0.0.0.0 & python3 gpt.py --host=0.0.0.0 & python3 gpt-dalle.py --host=0.0.0.0"]

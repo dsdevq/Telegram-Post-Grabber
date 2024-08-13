@@ -16,6 +16,33 @@ with open(abspath('grabber-config.json'), encoding='utf-8') as f:
 client = TelegramClient('bot_session_admin', config['client']['api_id'], config['client']['api_hash'])
 client.start(bot_token=config['bot']['actions-token'])
 
+@client.on(events.NewMessage)
+async def handler(event):
+    # Define the keyboard with GPT, GPT + DALLE, Later, and Trash buttons
+    keyboard = [
+        [  
+            Button.inline("GPT", b"gpt"),
+            Button.inline("GPT + DALLE", b"gpt_dalle")
+        ],
+        [
+            Button.inline("Later", b"later"),
+            Button.inline("Trash", b"trash")
+        ]
+    ]
+    
+    # Duplicate the message with buttons and send it
+    if event.message:
+        if event.message.media:
+            # Send the media with the caption if it's a media message
+            await client.send_file(event.chat_id, file=event.message.media, caption=event.message.text, buttons=keyboard)
+        else:
+            # Send just the text if it's a text message
+            await client.send_message(event.chat_id, event.message.text, buttons=keyboard)
+    
+    # Delete the original message
+    await event.message.delete()
+
+
 @client.on(events.NewMessage(chats=config['settings']['my_channels']))
 async def handler(event):
     # Define the keyboard with GPT, GPT + DALLE, Later, and Trash buttons
